@@ -1,0 +1,35 @@
+{ "name": "mini-lodash-bundler-pmb",
+  "version": "0.0.1",
+  "description": "Scripts to build my favorite lodash flavors and package them for npm.",
+  "keywords": [ "lodash", "minified" ],
+
+  "author": "M.K. (https://github.com/mk-pmb)",
+  "homepage": "https://github.com/mk-pmb/mini-lodash-bundler-pmb#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-pmb/mini-lodash-bundler-pmb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mk-pmb/mini-lodash-bundler-pmb/issues"
+  },
+
+  "private": false, "license": "MIT",
+
+  "main": "bundler.js",
+  "scripts": {
+    "test": "nodejs test/all.js"
+  },
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+
+  "dependencies": {
+    "lodash-cli": "^4.17.1",
+    "wtfnode": "^0.4.0"
+  },
+  "devDependencies": {},
+
+
+  "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
+}
