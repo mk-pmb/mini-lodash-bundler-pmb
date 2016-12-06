@@ -1,6 +1,6 @@
-{ "name": "<pkName>",
-  "version": "<pkVer>",
-  "description": "lodash v<loVer>, minified, on npm.",
+{ "name": "mini-lodash-‹%loMajor_3%›-pmb",
+  "version": "‹%pkVer%›",
+  "description": "‹%pkDescr%›",
   "keywords": [
     "amd",
     "lodash",

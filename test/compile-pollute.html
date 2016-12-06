@@ -15,6 +15,7 @@
     var args = Array.prototype.slice.call(arguments);
     log('define():', args);
   };
+  window.define.amd = {};
 
   window.reportVars = function (stage) {
     log('vars @ ' + stage + ':');
@@ -24,23 +25,22 @@
     log();
   };
   window.reportVars('init');
+  window.module = { exports: {} };
 }());
 </script>
 
-<script src="../build/cache/compile.min.js"></script>
+<script src="../build/cache/compile.cjs.min.js"></script>
 <script>
 /*jslint indent: 2, maxlen: 80, browser: true */
 (function () {
   'use strict';
-  var log = window.log, ld;
+  var log = window.log, ld, compile = window.module.exports;
 
   window.reportVars('loaded');
 
-  ld = (function wrapCompile() { return window.compileLodash(); }());
-  log('compile result:');
-  log('   type:', typeof ld);
-  log(' string:', JSON.stringify(String(ld)));
-  log('  props:', Object.keys(ld));
+  window.define('TEST', { TEST: true });
+  ld = (function wrapCompile() { return compile(); }());
+  log('compile result:', ld);
   log();
 
   window.reportVars('compiled');

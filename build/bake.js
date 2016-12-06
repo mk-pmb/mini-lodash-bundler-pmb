@@ -16,7 +16,6 @@ var EX = { launchTime: Date.now() }, lodashCli = require('lodash-cli'),
   bundlerVer = versCalc.checkVerFmt(require('../package.json').version),
   lodashVer = versCalc.checkVerFmt(require('lodash-cli/package.json').version),
   distVer = versCalc.calculateDistVersion(lodashVer, bundlerVer),
-  distPkg = 'mini-lodash-' + numlpad(lodashVer[1], 1e3) + '-pmb',
   buildDir = pathLib.dirname(module.filename),
   outputDir = pathLib.join(buildDir, 'cache');
 
@@ -31,29 +30,33 @@ EX.miniLicense = [ '/**',   // taken from minified download version of lodash
 
 
 EX.bakeFiles = function (whenBundled) {
-  var todo = [], textVars = {
+  var todo = [], txv = {
     bnVer: bundlerVer[0],
     loVer: lodashVer[0],
-    pkName: distPkg,
-    plVer: distVer[0],
+    pkVer: distVer[0],
+    loMajor_3: numlpad(lodashVer[1], 1e3),
+    pkDescr: ('lodash v' + lodashVer[0] + ', minified, on npm.'
+    + ' Includes a housebroken AMD version.'),
   };
 
   ['README.md', 'package.json'].forEach(function (fn) {
     todo.push({ srcFile: 'dist-' + fn.toLowerCase(), saveFn: fn,
-      textVars: textVars });
+      textVars: txv });
   });
 
-  Object.keys(flavors).forEach(function (flName) {
-    var fl = flavors[flName], job;
-    if (fl.skip) { return; }
-    job = (((fl.copy === true) && {})
-      || EX.prepareBuildTask(fl)
-      );
-    if (!job) { return; }
-    job.saveFn = flName + '.js';
-    if (fl.repack) { job.translate = EX.repackTrans.bind(null, fl.repack); }
-    todo.push(job);
-  });
+  if (process.env.BAKE_FLAVORS !== 'skip') {
+    Object.keys(flavors).forEach(function (flName) {
+      var fl = flavors[flName], job;
+      if (fl.skip) { return; }
+      job = (((fl.copy === true) && {})
+        || EX.prepareBuildTask(fl)
+        );
+      if (!job) { return; }
+      job.saveFn = flName + '.js';
+      if (fl.repack) { job.translate = EX.repackTrans.bind(null, fl.repack); }
+      todo.push(job);
+    });
+  }
 
   async.each(todo, EX.buildFile, (whenBundled || EX.reportDone));
 };
@@ -107,6 +110,7 @@ EX.prepareBuildTask = function (fl) {
 EX.repackIifeFmt = ';define.BAKE = function () {%output%  return _;};';
 EX.repackIifeStartRgx = /\n;\s*define\.BAKE\b[ -z]*\{\s*/;
 EX.repackIifeEndRgx = /\s*\}[\s;]{0,8}$/;
+EX.metaBuildLineRgx = /(^|\n)[ -0]+[Bb]uild:[\x00-\t\x0B-\uFFFF]*/g;
 
 
 EX.repackTrans = function (tmpl, code, whenRepacked) {
@@ -118,8 +122,8 @@ EX.repackTrans = function (tmpl, code, whenRepacked) {
     EX.log({ codeLines: kisi.dumpHugeText(code) });
     return fail('cannot find start of lodash code');
   }
-  tmpl.origMeta = code[0];
-  tmpl.origCode = code[1].replace(EX.repackIifeEndRgx, '');
+  tmpl.meta = code[0];
+  tmpl.code = code[1].replace(EX.repackIifeEndRgx, '');
   code = [];
 
   function tmplErr(err) { tmplErr.had = err; }
@@ -133,8 +137,12 @@ EX.repackTrans = function (tmpl, code, whenRepacked) {
     if (!fx) { return; }
     ln = ln[3];
     switch (fx) {
-    case 'origMeta':
-    case 'origCode':
+    case 'censor_meta_iife':
+      tmpl.meta = tmpl.meta.replace(EX.metaBuildLineRgx,
+        function (bl) { return bl.replace(/( iife=)"[ \!#-~]+"/g, '$1…'); });
+      return;
+    case 'meta':
+    case 'code':
       return code.push(indent + tmpl[fx]);
     }
     return tmplErr('unknown effect: ' + fx);
@@ -157,8 +165,8 @@ EX.kvPairsToEqual = function (dict) {
 };
 
 
-EX.insertVars = function (text, vars) {
-  return String(text).replace(/<(\w+)>/g, function (m, k) {
+EX.insertVars = function (vars, text) {
+  return String(text).replace(/‹%(\w+)%›/g, function (m, k) {
     k = vars[k];
     return (k === undefined ? m : String(k));
   });
@@ -175,7 +183,7 @@ EX.buildFile = function (how, whenBuilt) {
   if (how.srcFunc) { wafa.push(how.srcFunc); }
   if (how.textVars) {
     wafa.push(function insertVars(fileText, deliver) {
-      fileText = EX.insertVars(fileText, how.textVars);
+      fileText = EX.insertVars(how.textVars, fileText);
       return deliver(null, fileText);
     });
   }

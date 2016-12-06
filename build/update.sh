@@ -15,21 +15,26 @@ function update () {
     echo 'E: failed to detect lodash-cli version' >&2)
 
   local BASEURL="https://raw.githubusercontent.com/lodash/lodash/$LD_VER/"
+  ensure_license_utf8 || return $?
+
   local EDITIONS=(
     ''
-    .core
+    core.
     )
   local EDITION=
   local SAVE_FN=
   local SAVED_VER=
   for EDITION in "${EDITIONS[@]}"; do
-    SAVE_FN="cache/_${EDITION:-.vanilla}.min.js"
-    dwnl "${BASEURL}dist/lodash${EDITION}.min.js" "$SAVE_FN" || return $?
+    SAVE_FN="cache/${EDITION:-full.}_.min.js"
+    dwnl "${BASEURL}dist/lodash.${EDITION}min.js" "$SAVE_FN" || return $?
     assert_lodash_version "$SAVE_FN" || return $?
   done
 
-  ensure_license_utf8 || return $?
-  check_flavor_freshness || nodejs bake.js || return $?
+  local FLAVORS=()
+  readarray -t FLAVORS < <(sed -nre 's~^  "([^"]+)":.*$~\1~p' -- flavors.json)
+  local BAKE_FLAVORS=
+  check_flavor_freshness && BAKE_FLAVORS=skip
+  BAKE_FLAVORS="$BAKE_FLAVORS" nodejs bake.js || return $?
 
   return 0
 }
@@ -90,8 +95,6 @@ function assert_lodash_version () {
 
 
 function check_flavor_freshness () {
-  local FLAVORS=()
-  readarray -t FLAVORS < <(sed -nre 's~^  "([^"]+)":.*$~\1~p' -- flavors.json)
   local FLAVOR=
   for FLAVOR in "${FLAVORS[@]}"; do
     assert_lodash_version "cache/$FLAVOR.js" || return $?

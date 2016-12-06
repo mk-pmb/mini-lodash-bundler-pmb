@@ -1,24 +1,26 @@
 ﻿{
-  "compile.dev": {
+  "compile.cjs.dev": {
     "build": { "exports": "none", "strict": true, "--development": true },
     "repack": [
-      "#!origMeta", "\n",
-      "function compileLodash() {\n",
+      "#!censor_meta_iife",
+      "#!meta", "\n",
+      "module.exports = function compileLodash() {\n",
       "//##BEGIN_LODASH##\n",
-      "#!origCode", "\n",
+      "#!code", "\n",
       "//##ENDOF_LODASH##\n",
-      "}\n" ]
+      "};\n" ]
     },
 
-  "compile.min": {
+  "compile.cjs.min": {
     "build": { "exports": "none", "strict": true, "--production": true },
     "repack": [
-      "#!origMeta", "\n",
-      "function compileLodash() {\n",
+      "#!censor_meta_iife",
+      "#!meta", "\n",
+      "module.exports = function compileLodash() {\n",
       "//##BEGIN_LODASH##\n",
-      "#!origCode", "\n",
+      "#!code", "\n",
       "//##ENDOF_LODASH##\n",
-      "}\n" ]
+      "};\n" ]
     },
 
 

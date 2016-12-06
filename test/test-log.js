@@ -12,14 +12,21 @@
     return x.slice(0, head).concat(' …[+' + snip + ']… ', x.slice(-tail));
   }
 
+  function describe(x) {
+    switch (x && typeof x) {
+    case 'function':
+      x = Function.prototype.toString.call(x);
+      break;
+    case 'object':
+      x = JSON.stringify(x, null, 2).replace(/\n\s*/g, ' ');
+      break;
+    }
+    return ellip(String(x)).replace(/\n/g, '¶ ');
+  }
+
   function log() {
     var args = Array.prototype.slice.call(arguments), msg;
-    msg = args.map(function (arg) {
-      arg = ((arg && typeof arg) === 'object'
-        ? JSON.stringify(arg, null, 2).replace(/\n\s*/g, ' ')
-        : String(arg));
-      return ellip(arg);
-    }).join(' ').replace(/\n/g, '¶ ');
+    msg = args.map(describe).join(' ');
     log.dest.appendChild(document.createTextNode(msg + '\n'));
   }
   log.dest = document.createElement('pre');
@@ -27,6 +34,10 @@
   body.appendChild(log.dest);
 
   window.log = log;
+  window.onerror = function () {
+    var args = Array.prototype.slice.call(arguments);
+    log('E:', args);
+  };
 
 
 
