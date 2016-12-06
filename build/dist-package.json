@@ -1,0 +1,21 @@
+{ "name": "<pkName>",
+  "version": "<pkVer>",
+  "description": "lodash v<loVer>, minified, on npm.",
+  "keywords": [
+    "amd",
+    "lodash",
+    "minified"
+  ],
+  "author": "lodash by John-David Dalton + contributors, packaged by M.K.",
+  "homepage": "https://github.com/mk-pmb/mini-lodash-bundler-pmb#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-pmb/mini-lodash-bundler-pmb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mk-pmb/mini-lodash-bundler-pmb/issues"
+  },
+  "private": false, "license": "MIT",
+  "main": "_.min.js",
+  "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
+}

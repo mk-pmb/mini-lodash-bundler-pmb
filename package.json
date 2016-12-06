@@ -1,7 +1,7 @@
 { "name": "mini-lodash-bundler-pmb",
   "version": "0.0.1",
   "description": "Scripts to build my favorite lodash flavors and package them for npm.",
-  "keywords": [ "lodash", "minified" ],
+  "keywords": [ "lodash" ],
 
   "author": "M.K. (https://github.com/mk-pmb)",
   "homepage": "https://github.com/mk-pmb/mini-lodash-bundler-pmb#readme",
@@ -15,8 +15,9 @@
 
   "private": false, "license": "MIT",
 
-  "main": "bundler.js",
+  "main": "build/bake.js",
   "scripts": {
+    "build": "bash build/update.sh",
     "test": "nodejs test/all.js"
   },
   "directories": {

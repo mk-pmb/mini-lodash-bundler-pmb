@@ -1,0 +1,50 @@
+<!DOCTYPE html><html><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>test namespace pollution</title>
+  <meta http-equiv="Content-Script-Type" content="text/javascript">
+</head><body>
+
+<script src="test-log.js"></script>
+<script>
+/*jslint indent: 2, maxlen: 80, browser: true */
+(function () {
+  'use strict';
+  var log = window.log, usc = '_';
+
+  window.define = function () {
+    var args = Array.prototype.slice.call(arguments);
+    log('define():', args);
+  };
+
+  window.reportVars = function (stage) {
+    log('vars @ ' + stage + ':');
+    log('        _ = ', window[usc]);
+    log('   lodash = ', window.lodash);
+    log('  compile = ', window.compileLodash);
+    log();
+  };
+  window.reportVars('init');
+}());
+</script>
+
+<script src="../build/cache/compile.min.js"></script>
+<script>
+/*jslint indent: 2, maxlen: 80, browser: true */
+(function () {
+  'use strict';
+  var log = window.log, ld;
+
+  window.reportVars('loaded');
+
+  ld = (function wrapCompile() { return window.compileLodash(); }());
+  log('compile result:');
+  log('   type:', typeof ld);
+  log(' string:', JSON.stringify(String(ld)));
+  log('  props:', Object.keys(ld));
+  log();
+
+  window.reportVars('compiled');
+}());
+</script>
+
+</body></html>

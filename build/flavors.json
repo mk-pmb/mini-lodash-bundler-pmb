@@ -1,0 +1,33 @@
+﻿{
+  "compile.dev": {
+    "build": { "exports": "none", "strict": true, "--development": true },
+    "repack": [
+      "#!origMeta", "\n",
+      "function compileLodash() {\n",
+      "//##BEGIN_LODASH##\n",
+      "#!origCode", "\n",
+      "//##ENDOF_LODASH##\n",
+      "}\n" ]
+    },
+
+  "compile.min": {
+    "build": { "exports": "none", "strict": true, "--production": true },
+    "repack": [
+      "#!origMeta", "\n",
+      "function compileLodash() {\n",
+      "//##BEGIN_LODASH##\n",
+      "#!origCode", "\n",
+      "//##ENDOF_LODASH##\n",
+      "}\n" ]
+    },
+
+
+
+
+
+
+
+
+
+  "": { "skip": "end of list" }
+}
