@@ -1,5 +1,5 @@
 { "name": "mini-lodash-bundler-pmb",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Scripts to build my favorite lodash flavors and package them for npm.",
   "keywords": [ "lodash" ],
 
@@ -26,8 +26,8 @@
   },
 
   "dependencies": {
-    "lodash-cli": "^4.17.1",
-    "wtfnode": "^0.4.0"
+    "async": "^2.0.1",
+    "lodash-cli": "^4.17.1"
   },
   "devDependencies": {},
 
