@@ -15,7 +15,7 @@ Versioning scheme:
   mini-…:   aaaLLL  .  MMMnnn  .  PPPqqq    = ‹%pkVer%›
 ```
 
-  [bundler]: (https://github.com/mk-pmb/mini-lodash-bundler-pmb)
+  [bundler]: https://github.com/mk-pmb/mini-lodash-bundler-pmb
 
 
 Files:
