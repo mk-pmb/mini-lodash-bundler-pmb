@@ -5,7 +5,6 @@
   'use strict';
   function e(x) { return (x || false); }
   function f(x) { return (typeof x === 'function'); }
-  function o(x) { return ((x && typeof x) === 'object'); }
   var n = 'lodash', L = (function () {
     /MAGIC_LINE/.compileFuncBody();
   }()), w, m, d;
@@ -21,11 +20,6 @@
     && w);
   /MAGIC_LINE/.buffer.end();
 
-  /* detect CommonJS module */
-  m = e((typeof module === 'object') && e(module).exports && module);
-  if (m && (w[n] === m.exports)) { w[n] = L; }
-  m.exports = L;
-
   /* detect AMD */
   d = e((typeof define === 'function') && define.amd && define);
   if (d) {
@@ -33,7 +27,14 @@
     define(n, function () { return L; });
   }
 
-  if ((m || d || w[n]) === undefined) { w[n] = L; }
+  /* detect CommonJS module */
+  m = e((typeof module === 'object') && e(module).exports && module);
+  if (m) {
+    if (w[n] === m.exports) { w[n] = L; }
+    m.exports = L;
+  }
+
+  if (w && ((m || d || w[n]) === undefined)) { w[n] = L; }
 
 
 

@@ -2,24 +2,20 @@
 /* -*- tab-width: 2 -*- */
 (function () {
   'use strict';
-  var w = window, log = w.log, usc = '_';
-
-  w.module = { exports: {} };
-  w.define = function () {
-    var args = Array.prototype.slice.call(arguments);
-    log.apply(null, ['define():', arguments.length].concat(args));
-    w.module.defined = args.pop();
-    w.module.amdName = args.shift();
-    log();
-  };
-  w.define.amd = {};
+  var w = window, log = w.log, usc = '_', usd = '$';
 
   w.reportVars = function (stage) {
+    var extraArgs = Array.prototype.slice.call(arguments, 1);
     log('vars @ ' + stage + ':');
-    log('        _ = ', w[usc]);
-    log('   lodash = ', w.lodash);
-    log('  exports = ', w.module.exports);
-    log('  defined = ', w.module.amdName, ':', w.module.defined);
+    if (extraArgs.length) {
+      log.apply(null, ['extraArgs ='].concat(extraArgs));
+    }
+    log('        _ =', w[usc]);
+    log('   lodash =', w.lodash);
+    if (w.module) {
+      log('  exports =', w.module.exports);
+      log('  defined =', w.module.amdName, ':', w.module.defined);
+    }
     log();
   };
 

@@ -12,12 +12,25 @@
     return x.slice(0, head).concat(' …[+' + snip + ']… ', x.slice(-tail));
   }
 
+  function isFun(x) { return (typeof x === 'function'); }
+
+  function looksLikeLodash(x) {
+    return (isFun(x)
+      && isFun(x.intersectionWith)
+      && isFun(x.first) && (x.first === x.head)
+      && isFun(x.eachRight) && (x.eachRight === x.forEachRight)
+      && isFun(x.dropRightWhile)
+      && isFun(x.sortedLastIndexOf)
+      && isFun(x.curryRight)
+      && ('ƒ { ' + Object.keys(x).sort().join(' ') + ' }'));
+  }
+
   function describe(x) {
     switch (x && typeof x) {
     case undefined:
       return '\u26F6';
     case 'function':
-      x = Function.prototype.toString.call(x);
+      x = (looksLikeLodash(x) || Function.prototype.toString.call(x));
       break;
     case 'object':
       x = (JSON.stringify(x, null, 2) || ('keys: ' +

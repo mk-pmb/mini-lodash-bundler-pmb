@@ -40,6 +40,13 @@ Files:
       * if AMD was detected and `window.lodash ===` the `define()` function.
 
 
+Known issues
+------------
+
+  * `curl-amd@0.8.13` seems to not support explicit module names when it has
+    to dynamically fetch the file. ("Error: define() missing or duplicated: …")
+    You can either use the `anon.amd` flavor if you want curl to fetch it,
+    or load the umd flavor with a plain old script tag.
 
 
 
