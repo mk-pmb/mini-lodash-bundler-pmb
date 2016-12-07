@@ -30,8 +30,7 @@ Files:
     returns one (always same) full lodash.
   * `full.lodash.umd.js`: like `full.anon.amd.js` but use module name
     "lodash" for AMD.
-    * Also tries to CommonJS-export it (replaces `module.exports` if it's
-      truthy).
+    * Also tries to CommonJS-export it.
     * If `window` looks browser-y, additionally sets `window.lodash`…
       * if `window.lodash === undefined` and neither AMD nor CommonJS were
         detected, or

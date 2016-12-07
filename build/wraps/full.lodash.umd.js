@@ -28,7 +28,8 @@
   }
 
   /* detect CommonJS module */
-  m = e((typeof module === 'object') && e(module).exports && module);
+  m = e((typeof module === 'object') && module);
+  m = ((typeof e(m.exports) === 'object') && m);
   if (m) {
     if (w[n] === m.exports) { w[n] = L; }
     m.exports = L;

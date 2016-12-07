@@ -1,5 +1,5 @@
 { "name": "mini-lodash-bundler-pmb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scripts to build my favorite lodash flavors and package them for npm.",
   "keywords": [ "lodash" ],
 
