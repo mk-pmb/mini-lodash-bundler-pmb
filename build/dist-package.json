@@ -16,6 +16,6 @@
     "url": "https://github.com/mk-pmb/mini-lodash-bundler-pmb/issues"
   },
   "private": false, "license": "MIT",
-  "main": "_.min.js",
+  "main": "full.lodash.umd.js",
   "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
 }

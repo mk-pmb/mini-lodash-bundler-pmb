@@ -14,14 +14,19 @@
 
   function describe(x) {
     switch (x && typeof x) {
+    case undefined:
+      return '\u26F6';
     case 'function':
       x = Function.prototype.toString.call(x);
       break;
     case 'object':
-      x = JSON.stringify(x, null, 2).replace(/\n\s*/g, ' ');
+      x = (JSON.stringify(x, null, 2) || ('keys: ' +
+          JSON.stringify(Object.keys(x), null, 2))
+        ).replace(/\n\s*/g, ' ');
       break;
     }
-    return ellip(String(x)).replace(/\n/g, '¶ ');
+    x = ellip(String(x)).replace(/\t/g, '\u21B9 ').replace(/\n/g, '¶ ');
+    return x;
   }
 
   function log() {

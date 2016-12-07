@@ -3,6 +3,7 @@
 SELFPATH="$(readlink -m "$BASH_SOURCE"/..)"
 
 source "$SELFPATH"/check-lodash-version.sh --lib || exit $?
+source "$SELFPATH"/wraps/wrap_compile_func_body.sh --lib || exit $?
 
 
 function update () {
@@ -36,6 +37,39 @@ function update () {
   check_flavor_freshness && BAKE_FLAVORS=skip
   BAKE_FLAVORS="$BAKE_FLAVORS" nodejs bake.js || return $?
 
+  local PKG_NAME="$(sed -nre 's~^\{\s*"name":\s*"([a-z0-9-]+)"\W*$~\1~p;q
+    ' -- cache/package.json)"
+  [ -n "$PKG_NAME" ] || return 8$(
+    echo 'E: failed to detect dist package name' >&2)
+  local DIST_DIR="../dist/$PKG_NAME"
+  mkdir -p "$DIST_DIR" || return $?
+  rm -- "$DIST_DIR"/{.,}[a-z]* 2>/dev/null
+  local DIST_FILES=(
+    LICENSE.txt
+    package.json
+    README.md
+    )
+  readarray -t DIST_FILES < <(
+    ( sed -nre 's~^\s*\* \x60(\S+\.js)\x60.*~\1~p' -- dist-readme.md \
+        | sed -re 's~(\S*)\{(\S*),(\S*)\}(\S*)~\1\2\4\n\1\3\4~g'
+      printf '%s\n' "${DIST_FILES[@]}"
+    ) | sort -u )
+
+  for SAVE_FN in wraps/*.js; do
+    wrap_compile_func_body "$SAVE_FN" cache/compile.cjs.min.js \
+      >cache/"$(basename "$SAVE_FN")" || return $?
+  done
+
+  # printf '  "%s",\n' "${DIST_FILES[@]}" | sed -re '
+  #   1s~^~window.DIST_FILES = [\n~
+  #   $s~,$~\n];~
+  #   ' | tee cache/dist-files-list.js
+
+  for SAVE_FN in "${DIST_FILES[@]}"; do
+    cp --verbose --target-directory="$DIST_DIR" \
+      -- "cache/$SAVE_FN" || return $?
+  done
+
   return 0
 }
 
@@ -59,18 +93,6 @@ function dwnl () {
     ls -l "$DEST_FN".tmp >&2)
   mv --no-target-directory --verbose -- "$DEST_FN"{.tmp,} || return $?
   return 0
-}
-
-
-function wrap_it () {
-  local WRAP_JS="$1"; shift
-  local ORIG_JS="$1"; shift
-
-  echo "E: stub!" >&2; return 8
-
-  local PIPE_ERR="${PIPESTATUS[*]}"
-  let PIPE_ERR="${PIPE_ERR// /+}"
-  return "$PIPE_ERR"
 }
 
 

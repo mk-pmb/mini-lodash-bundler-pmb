@@ -26,15 +26,18 @@ Files:
       AMD loader and `define()` to it.
   * `compile.cjs.min.js` CommonJS-exports a function that compiles a full
     lodash and won't pollute my browser's window object.
-  * `full.anon.amd.js` anonymously AMD-`define()`s a factory function that
+  * `full.anon.amd.js` anonymously `define()`s a factory function that
     returns one (always same) full lodash.
   * `full.lodash.umd.js`: like `full.anon.amd.js` but use module name
-    "lodash" for AMD. Also tries to CommonJS-export it (replaces
-    `module.exports` if it's truthy).
-    If `window` looks somewhat browser-y, additionally sets `window.lodash` if:
-    (1) it is `=== undefined` and neither AMD nor CommonJS were detected, or
-    (2) if AMD was detected and `window.lodash ===` the `define()` function.
-
+    "lodash" for AMD.
+    * Also tries to CommonJS-export it (replaces `module.exports` if it's
+      truthy).
+    * If `window` looks browser-y, additionally sets `window.lodash`…
+      * if `window.lodash === undefined` and neither AMD nor CommonJS were
+        detected, or
+      * if CommonJS was detected and `window.lodash ===` the old/original
+        exports object, or
+      * if AMD was detected and `window.lodash ===` the `define()` function.
 
 
 
