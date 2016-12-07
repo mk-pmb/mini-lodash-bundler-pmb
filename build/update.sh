@@ -41,9 +41,14 @@ function update () {
     ' -- cache/package.json)"
   [ -n "$PKG_NAME" ] || return 8$(
     echo 'E: failed to detect dist package name' >&2)
+
   local DIST_DIR="../dist/$PKG_NAME"
   mkdir -p "$DIST_DIR" || return $?
   rm -- "$DIST_DIR"/{.,}[a-z]* 2>/dev/null
+  SAVE_FN='../dist/latest'
+  [ -L "$SAVE_FN" ] && rm -- "$SAVE_FN"
+  ln --symbolic --no-target-directory -- "$PKG_NAME" "$SAVE_FN"
+
   local DIST_FILES=(
     LICENSE.txt
     package.json

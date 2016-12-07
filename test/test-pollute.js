@@ -20,7 +20,7 @@
   };
 
   w.compile = function (slot) {
-    var ex = w.module[slot], tmp = '¬ƒ';
+    var ex = (w.module || false)[slot], tmp = '¬ƒ';
     ex = ((typeof ex === 'function') && ex);
     if (ex) {
       try {
